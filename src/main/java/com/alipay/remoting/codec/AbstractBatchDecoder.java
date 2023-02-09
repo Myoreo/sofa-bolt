@@ -237,8 +237,10 @@ public abstract class AbstractBatchDecoder extends ChannelInboundHandlerAdapter 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
+            //1、创建或者从 netty 的回收池中获取一个 RecyclableArrayList 实例，用于存储最终的解码数据
             RecyclableArrayList out = RecyclableArrayList.newInstance();
             try {
+                //2、将传入的 ByteBuf 添加到 Cumulator 累加器实例中
                 ByteBuf data = (ByteBuf) msg;
                 first = cumulation == null;
                 if (first) {
@@ -355,6 +357,7 @@ public abstract class AbstractBatchDecoder extends ChannelInboundHandlerAdapter 
      */
     protected void callDecode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         try {
+            //3、之后不断的从 ByteBuf 中读取数据：首先解码出protocolCode，之后从协议管理器中获取相应的协议对象，再从协议对象中获取相应的 CommandDecoder 实现类实例
             while (in.isReadable()) {
                 int outSize = out.size();
                 int oldInputLength = in.readableBytes();

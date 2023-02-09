@@ -4,12 +4,17 @@
 <Configuration status="OFF">
     <properties>
         <property name="LOG_HOME">${sys:logging.path}/bolt</property>
-        <Property name="LOG_LEVEL">${sys:com.alipay.remoting.client.log.level}</Property>
+<!--        <Property name="LOG_LEVEL">${sys:com.alipay.remoting.client.log.level}</Property>-->
+        <Property name="LOG_LEVEL">INFO</Property>
         <Property name="LOG_ENCODE">${sys:com.alipay.remoting.client.log.encode}</Property>
     </properties>
 
     <!-- appenders -->
     <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%C{1}#%L] [%t] %m%n%throwable"/>
+        </Console>
+
         <RollingRandomAccessFile name="CommonDefaultAppender"
                                  immediateFlush="false"
                                  fileName="${LOG_HOME}/common-default.log"
@@ -45,14 +50,14 @@
         </RollingRandomAccessFile>
 
         <RollingRandomAccessFile name="RpcRemotingAppender"
-                                 immediateFlush="false"
+                                 immediateFlush="true"
                                  fileName="${LOG_HOME}/remoting-rpc.log"
                                  append="true"
                                  filePattern="${LOG_HOME}/remoting-rpc.log.%d{yyyy-MM-dd}">
-            <Filters>
-                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="${LOG_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
+<!--            <Filters>-->
+<!--                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+<!--                <ThresholdFilter level="${LOG_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>-->
+<!--            </Filters>-->
             <PatternLayout charset="${LOG_ENCODE}">
                 <pattern>%d %-5p [%C{1}#%L] [%t] %m%n%throwable</pattern>
             </PatternLayout>
@@ -143,12 +148,12 @@
             <appender-ref ref="ERROR-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="ConnectionEvent" level="${LOG_LEVEL}" additivity="false">
+        <AsyncLogger name="ConnectionEvent" level="${LOG_LEVEL}" additivity="true">
             <appender-ref ref="ConnectionEventAppender"/>
             <appender-ref ref="ERROR-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="RpcRemoting" level="${LOG_LEVEL}" additivity="false">
+        <AsyncLogger name="RpcRemoting" level="${LOG_LEVEL}" additivity="true">
             <appender-ref ref="RpcRemotingAppender"/>
             <appender-ref ref="ERROR-APPENDER"/>
         </AsyncLogger>
@@ -170,7 +175,9 @@
 
         <root level="${LOG_LEVEL}">
             <appender-ref ref="CommonDefaultAppender"/>
+            <appender-ref ref="ConnectionEventAppender"/>
             <appender-ref ref="ERROR-APPENDER"/>
+            <AppenderRef ref="STDOUT"/>
         </root>
     </Loggers>
 </Configuration>

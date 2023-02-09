@@ -20,10 +20,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.alipay.remoting.log.BoltLoggerFactory;
 import org.junit.Assert;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import org.slf4j.Logger;
 
 /**
  * ConnectionEventProcessor for ConnectionEventType.CONNECT
@@ -32,6 +34,7 @@ import com.alipay.remoting.ConnectionEventProcessor;
  * @version $Id: CONNECTEventProcessor.java, v 0.1 Apr 8, 2016 10:58:48 AM xiaomin.cxm Exp $
  */
 public class CONNECTEventProcessor implements ConnectionEventProcessor {
+    private static final Logger logger = BoltLoggerFactory.getLogger("ConnectionEvent");
 
     private AtomicBoolean  connected    = new AtomicBoolean();
     private AtomicInteger  connectTimes = new AtomicInteger();

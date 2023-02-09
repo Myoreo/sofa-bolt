@@ -37,7 +37,8 @@ public class BoltLoggerFactory {
     private static String       BOLT_LOG_SPACE            = "com.alipay.remoting";
 
     private static final String LOG_PATH                  = "logging.path";
-    private static final String LOG_PATH_DEFAULT          = System.getProperty("user.home")
+    private static final String LOG_PATH_DEFAULT          = System.getProperty("user.dir")
+            //System.getProperty("user.home")
                                                             + File.separator + "logs";
     private static final String CLIENT_LOG_LEVEL          = "com.alipay.remoting.client.log.level";
     private static final String CLIENT_LOG_LEVEL_DEFAULT  = "INFO";

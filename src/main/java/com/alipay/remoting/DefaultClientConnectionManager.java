@@ -40,6 +40,7 @@ public class DefaultClientConnectionManager extends DefaultConnectionManager imp
 
         this.connectionEventHandler.setConnectionManager(this);
         this.connectionEventHandler.setConnectionEventListener(connectionEventListener);
+        //初始化connection client,Bootstrap
         this.connectionFactory.init(connectionEventHandler);
     }
 

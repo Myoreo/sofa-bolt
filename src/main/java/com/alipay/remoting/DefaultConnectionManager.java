@@ -44,6 +44,12 @@ import com.alipay.remoting.util.RunStateRecordedFutureTask;
 import com.alipay.remoting.util.StringUtils;
 
 /**
+ *
+ * 1、通过工厂创建 Connection 连接对象
+ * 2、通过注入的选择策略进行 Connection 连接的选择
+ * 3、管理创建和添加的 Connection 对象和 ConnectionPool 连接池对象（包括检查 Connection 对象、维护 ConnectionPool 的健壮性）
+ * 4、控制 Connection 对象的心跳打开与关闭
+ *
  * Abstract implementation of connection manager
  *
  * @author xiaomin.cxm
@@ -202,6 +208,7 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
     }
 
     /**
+     * server 直接添加Connection到pool中
      * @see com.alipay.remoting.ConnectionManager#add(com.alipay.remoting.Connection, java.lang.String)
      */
     @Override
@@ -467,6 +474,7 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
     }
 
     /**
+     * 根据URL创建Connection
      * @see com.alipay.remoting.ConnectionManager#create(com.alipay.remoting.Url)
      */
     @Override
@@ -562,6 +570,7 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
             if (null == initialTask) {
                 RunStateRecordedFutureTask<ConnectionPool> newTask = new RunStateRecordedFutureTask<ConnectionPool>(
                     callable);
+                //只初始化一遍
                 initialTask = this.connTasks.putIfAbsent(poolKey, newTask);
                 if (null == initialTask) {
                     initialTask = newTask;
@@ -670,6 +679,9 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
     /**
      * a callable definition for initialize {@link ConnectionPool}
      *
+     * 对应的是两种需求:
+     * 第一个对应连接已经创建好然后放入连接池的流程 服务端使用
+     * 第二个则是对应通过 Url 来创建一个连接池并且在连接池中做新建连接的流程 客户端使用
      * @author tsui
      * @version $Id: ConnectionPoolCall.java, v 0.1 Mar 8, 2016 10:43:51 AM xiaomin.cxm Exp $
      */
@@ -679,6 +691,7 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
         private int     syncCreateNumWhenNotWarmup;
 
         /**
+         * 服务端调用，不需要主动初始化connection
          * create a {@link ConnectionPool} but not init connections
          */
         public ConnectionPoolCall() {
@@ -707,6 +720,7 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
             final ConnectionPool pool = new ConnectionPool(connectionSelectStrategy);
             if (whetherInitConnection) {
                 try {
+                    //根据url创建Connection并添加到pool中
                     doCreate(this.url, pool, this.getClass().getSimpleName(),
                         syncCreateNumWhenNotWarmup);
                 } catch (Exception e) {
