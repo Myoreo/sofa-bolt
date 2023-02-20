@@ -25,7 +25,9 @@ import com.alipay.remoting.RemotingAddressParser;
 import com.alipay.remoting.RemotingCommand;
 import com.alipay.remoting.Url;
 import com.alipay.remoting.exception.RemotingException;
+import com.alipay.remoting.log.BoltLoggerFactory;
 import com.alipay.remoting.util.RemotingUtil;
+import org.slf4j.Logger;
 
 /**
  * Rpc client remoting
@@ -34,6 +36,8 @@ import com.alipay.remoting.util.RemotingUtil;
  * @version $Id: RpcClientRemoting.java, v 0.1 Apr 14, 2016 11:58:56 AM xiaomin.cxm Exp $
  */
 public class RpcClientRemoting extends RpcRemoting {
+    private static final Logger                                                 logger = BoltLoggerFactory
+            .getLogger(RpcClientRemoting.class);
 
     public RpcClientRemoting(CommandFactory commandFactory, RemotingAddressParser addressParser,
                              ConnectionManager connectionManager) {
@@ -68,6 +72,7 @@ public class RpcClientRemoting extends RpcRemoting {
             invokeContext = new InvokeContext();
         }
         final Connection conn = getConnectionAndInitInvokeContext(url, invokeContext);
+        logger.info("conn:{}", conn.getUrl());
         this.connectionManager.check(conn);
         return this.invokeSync(conn, request, invokeContext, timeoutMillis);
     }

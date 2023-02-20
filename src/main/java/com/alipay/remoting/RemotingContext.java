@@ -27,6 +27,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
+ * 包含channel上下文、InvokeContext、UserProcessor列表
  * Wrap the ChannelHandlerContext.
  * 
  * @author jiangping
