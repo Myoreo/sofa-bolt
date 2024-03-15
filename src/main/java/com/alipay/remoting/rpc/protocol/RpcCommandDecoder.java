@@ -49,8 +49,7 @@ public class RpcCommandDecoder implements CommandDecoder {
     private int                 lessLen;
 
     {
-        lessLen = RpcProtocol.getResponseHeaderLength() < RpcProtocol.getRequestHeaderLength() ? RpcProtocol
-            .getResponseHeaderLength() : RpcProtocol.getRequestHeaderLength();
+        lessLen = Math.min(RpcProtocol.getResponseHeaderLength(), RpcProtocol.getRequestHeaderLength());
     }
 
     /**

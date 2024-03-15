@@ -540,7 +540,6 @@ public class DefaultConnectionManager extends AbstractLifeCycle implements Conne
      */
     private ConnectionPool getConnectionPool(RunStateRecordedFutureTask<ConnectionPool> task) {
         return FutureTaskUtil.getFutureTaskResult(task, logger);
-
     }
 
     /**

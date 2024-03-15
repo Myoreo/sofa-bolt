@@ -477,6 +477,7 @@ public class RpcClient extends AbstractBoltClient {
      *
      * @param addr address
      */
+    @Override
     public void closeConnection(String addr) {
         ensureStarted();
         Url url = this.addressParser.parse(addr);

@@ -61,11 +61,11 @@ public class RpcClientDemoByMain {
 
         try {
             RequestBody req = new RequestBody(1, "hello world sync msg1");
-            String res = (String) client.invokeSync(addr, req, 3000);
+            String res = (String) client.invokeSync(addr, req, 30000);
             System.out.println("invoke sync result = [" + res + "]");
 
             req = new RequestBody(1, "hello world sync msg2");
-            res = (String) client.invokeSync(addr, req, 3000);
+            res = (String) client.invokeSync(addr, req, 30000);
             System.out.println("invoke sync result = [" + res + "]");
         } catch (RemotingException e) {
             String errMsg = "RemotingException caught in oneway!";
